@@ -1,5 +1,7 @@
 const wrapper = document.querySelector(".sliderWrapper");
 const menuItems = document.querySelectorAll(".menuItem");
+const searchInput = document.querySelector(".searchInput");
+const searchIcon = document.querySelector(".searchIcon");
 
 const products = [
   {
@@ -91,7 +93,49 @@ const currentProductTitle = document.querySelector(".productTitle");
 const currentProductPrice = document.querySelector(".productPrice");
 const currentProductColors = document.querySelectorAll(".color");
 const currentProductSizes = document.querySelectorAll(".size");
-const currrentProductDesc = document.querySelector(".productDesc")
+const currrentProductDesc = document.querySelector(".productDesc");
+
+const performSearch = () => {
+  const value = searchInput.value.toLowerCase().trim();
+  
+  // Find the index of the product that matches the search
+  const productIndex = products.findIndex(product => 
+    product.title.toLowerCase().includes(value)
+  );
+
+  if (productIndex !== -1) {
+    // 1. Move the slider
+    wrapper.style.transform = `translateX(${-100 * productIndex}vw)`;
+
+    // 2. Update the product details below
+    choosenProduct = products[productIndex];
+    currentProductTitle.textContent = choosenProduct.title;
+    currentProductPrice.textContent = "KSH " + choosenProduct.price;
+    currentProductImg.src = choosenProduct.colors[0].img;
+    currrentProductDesc.textContent = choosenProduct.desc;
+
+    // 3. Update colors
+    currentProductColors.forEach((color, index) => {
+      color.style.backgroundColor = choosenProduct.colors[index].code;
+    });
+
+    // Optional: Clear search and scroll to product
+    searchInput.value = "";
+    window.location.href = "#product"; 
+  } else {
+    alert("Shoe not found! Try searching for 'Jordan' or 'Blazer'.");
+  }
+};
+
+// Event listener for clicking the magnifying glass
+searchIcon.addEventListener("click", performSearch);
+
+// Event listener for pressing "Enter" in the input field
+searchInput.addEventListener("keyup", (e) => {
+  if (e.key === "Enter") {
+    performSearch();
+  }
+});
 
 menuItems.forEach((item, index) => {
   item.addEventListener("click", () => {
